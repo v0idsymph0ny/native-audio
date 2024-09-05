@@ -92,7 +92,6 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
                 player.volume = player.volume + self.FADE_STEP
             }
         }
-
     }
 
     func pause() {
@@ -179,5 +178,10 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
         let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
 
         return player.isPlaying
+    }
+
+    func seek(to time: TimeInterval) {
+        let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
+        player.currentTime = time
     }
 }

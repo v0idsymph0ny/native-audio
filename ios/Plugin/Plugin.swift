@@ -2,6 +2,7 @@ import AVFoundation
 import Foundation
 import Capacitor
 import CoreAudio
+import MediaPlayer
 
 enum MyError: Error {
     case runtimeError(String)
@@ -17,6 +18,9 @@ public class NativeAudio: CAPPlugin {
     var audioList: [String: Any] = [:]
     var fadeMusic = false
     var session = AVAudioSession.sharedInstance()
+    var audioEngine: AVAudioEngine?
+    var audioPlayerNode: AVAudioPlayerNode?
+    var analyzerNode: AVAudioMixerNode?
 
     override public func load() {
         super.load()
@@ -29,6 +33,25 @@ public class NativeAudio: CAPPlugin {
         } catch {
             print("Failed to set session category")
         }
+
+        // Initialize the audio engine
+        audioEngine = AVAudioEngine()
+        audioPlayerNode = AVAudioPlayerNode()
+        analyzerNode = AVAudioMixerNode()
+
+        if let engine = audioEngine, let player = audioPlayerNode, let analyzer = analyzerNode {
+            engine.attach(player)
+            engine.attach(analyzer)
+            
+            engine.connect(player, to: analyzer, format: nil)
+            engine.connect(analyzer, to: engine.outputNode, format: nil)
+
+            analyzer.installTap(onBus: 0, bufferSize: 1024, format: engine.outputNode.outputFormat(forBus: 0)) { buffer, _ in
+                self.analyzeAudioBuffer(buffer: buffer)
+            }
+        }
+
+        setupRemoteCommandCenter()
     }
 
     @objc func configure(_ call: CAPPluginCall) {
@@ -68,6 +91,14 @@ public class NativeAudio: CAPPlugin {
                             } else {
                                 audioAsset?.play(time: time)
                             }
+
+                            /*
+                            // Update the Now Playing Info Center
+                            if let asset = audioAsset {
+                                self.updateNowPlayingInfo(forAudioAsset: asset)
+                            }
+                            */
+
                             call.resolve()
                         } else if asset is Int32 {
                             let audioAsset = asset as? NSNumber ?? 0
@@ -190,6 +221,16 @@ public class NativeAudio: CAPPlugin {
         ])
     }
 
+    @objc func updateNowPlayingInfo(_ call: CAPPluginCall) {
+        guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
+            return
+        }
+
+        self.updateNowPlayingInfo(forAudioAsset: audioAsset)
+
+        call.resolve()
+    }
+
     private func preloadAsset(_ call: CAPPluginCall, isComplex complex: Bool) {
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
         let channels: NSNumber?
@@ -223,8 +264,8 @@ public class NativeAudio: CAPPlugin {
                 if asset == nil {
                     var basePath: String?
                     if isUrl == false {
-                        let assetPathSplit = assetPath.components(separatedBy: ".")
-                        basePath = Bundle.main.path(forResource: assetPathSplit[0], ofType: assetPathSplit[1])
+                        let docsPath = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                        basePath = docsPath.appendingPathComponent(assetPath).path
                     } else {
                         let url = URL(string: assetPath)
                         basePath = url!.path
@@ -271,5 +312,69 @@ public class NativeAudio: CAPPlugin {
                 throw MyError.runtimeError(Constant.ErrorAssetNotFound)
             }
         }
+    }
+
+    public func updateNowPlayingInfo(forAudioAsset audioAsset: AudioAsset) {
+        let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+        var nowPlayingInfo = [String: Any]()
+
+        nowPlayingInfo[MPMediaItemPropertyTitle] = "Song Title" // Replace with actual title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = "Artist Name" // Replace with actual artist name
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioAsset.getCurrentTime()
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioAsset.getDuration()
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
+
+        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+    }
+
+    private func setupRemoteCommandCenter() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+
+        commandCenter.playCommand.isEnabled = true
+        commandCenter.playCommand.addTarget { event in
+            if let audioAsset = self.audioList.values.first as? AudioAsset {
+                audioAsset.resume()
+                self.updateNowPlayingInfo(forAudioAsset: audioAsset)
+            }
+            return .success
+        }
+
+        commandCenter.changePlaybackPositionCommand.isEnabled = true
+        commandCenter.changePlaybackPositionCommand.addTarget { event in
+            guard let event = event as? MPChangePlaybackPositionCommandEvent else {
+                return .commandFailed
+            }
+            if let audioAsset = self.audioList.values.first as? AudioAsset {
+                audioAsset.seek(to: event.positionTime)
+                self.updateNowPlayingInfo(forAudioAsset: audioAsset)
+            }
+            return .success
+        }
+
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.pauseCommand.addTarget { event in
+            if let audioAsset = self.audioList.values.first as? AudioAsset {
+                audioAsset.pause()
+                self.updateNowPlayingInfo(forAudioAsset: audioAsset)
+            }
+            return .success
+        }
+
+        commandCenter.nextTrackCommand.isEnabled = false // Implement next track functionality if required
+        commandCenter.previousTrackCommand.isEnabled = false // Implement previous track functionality if required
+    }
+
+    func analyzeAudioBuffer(buffer: AVAudioPCMBuffer) {
+        guard let channelData = buffer.floatChannelData else { return }
+        let channelDataValue = channelData.pointee
+        let channelDataArray = Array(UnsafeBufferPointer(start: channelDataValue, count: Int(buffer.frameLength)))
+        
+        // Perform analysis (e.g., FFT) and extract relevant data
+        // Here you can perform frequency analysis and create a frequency bin array
+        
+        // Send data to frontend
+        self.notifyListeners("audioVisualizationData", data: [
+            "frequencyBins": channelDataArray
+        ])
     }
 }

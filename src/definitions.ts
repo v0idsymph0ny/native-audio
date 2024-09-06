@@ -13,7 +13,7 @@ export interface NativeAudio {
   getCurrentTime(options: { assetId: string }): Promise<{ currentTime: number }>;
   getDuration(options: { assetId: string }): Promise<{ duration: number }>;
   isPlaying(options: { assetId: string }): Promise<{ isPlaying: boolean }>;
-  updateNowPlayingInfo(options: { assetId: string }): Promise<void>;
+  updateNowPlayingInfo(options: { assetId: string, title?: string, artist?: string }): Promise<void>;
   /**
    * Listen for asset completed playing event
    *

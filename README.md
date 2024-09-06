@@ -368,6 +368,19 @@ isPlaying(options: { assetId: string; }) => Promise<{ isPlaying: boolean; }>
 --------------------
 
 
+### updateNowPlayingInfo(...)
+
+```typescript
+updateNowPlayingInfo(options: { assetId: string; title?: string; artist?: string; }) => Promise<void>
+```
+
+| Param         | Type                                                               |
+| ------------- | ------------------------------------------------------------------ |
+| **`options`** | <code>{ assetId: string; title?: string; artist?: string; }</code> |
+
+--------------------
+
+
 ### addListener('complete', ...)
 
 ```typescript

@@ -226,7 +226,11 @@ public class NativeAudio: CAPPlugin {
             return
         }
 
-        self.updateNowPlayingInfo(forAudioAsset: audioAsset)
+        let title: String = call.getString("title") ?? ""
+
+        let artist: String = call.getString("artist") ?? ""
+
+        self.updateNowPlayingInfo(forAudioAsset: audioAsset, title: title, artist: artist)
 
         call.resolve()
     }
@@ -314,12 +318,12 @@ public class NativeAudio: CAPPlugin {
         }
     }
 
-    public func updateNowPlayingInfo(forAudioAsset audioAsset: AudioAsset) {
+    public func updateNowPlayingInfo(forAudioAsset audioAsset: AudioAsset, title: String, artist: String) {
         let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
         var nowPlayingInfo = [String: Any]()
 
-        nowPlayingInfo[MPMediaItemPropertyTitle] = "Song Title" // Replace with actual title
-        nowPlayingInfo[MPMediaItemPropertyArtist] = "Artist Name" // Replace with actual artist name
+        nowPlayingInfo[MPMediaItemPropertyTitle] = title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = artist
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioAsset.getCurrentTime()
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioAsset.getDuration()
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
@@ -334,7 +338,7 @@ public class NativeAudio: CAPPlugin {
         commandCenter.playCommand.addTarget { event in
             if let audioAsset = self.audioList.values.first as? AudioAsset {
                 audioAsset.resume()
-                self.updateNowPlayingInfo(forAudioAsset: audioAsset)
+                //self.updateNowPlayingInfo(forAudioAsset: audioAsset)
             }
             return .success
         }
@@ -346,7 +350,7 @@ public class NativeAudio: CAPPlugin {
             }
             if let audioAsset = self.audioList.values.first as? AudioAsset {
                 audioAsset.seek(to: event.positionTime)
-                self.updateNowPlayingInfo(forAudioAsset: audioAsset)
+                //self.updateNowPlayingInfo(forAudioAsset: audioAsset)
             }
             return .success
         }
@@ -355,7 +359,7 @@ public class NativeAudio: CAPPlugin {
         commandCenter.pauseCommand.addTarget { event in
             if let audioAsset = self.audioList.values.first as? AudioAsset {
                 audioAsset.pause()
-                self.updateNowPlayingInfo(forAudioAsset: audioAsset)
+                //self.updateNowPlayingInfo(forAudioAsset: audioAsset)
             }
             return .success
         }

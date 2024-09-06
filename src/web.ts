@@ -101,7 +101,7 @@ export class NativeAudioWeb extends WebPlugin implements NativeAudio {
     return { isPlaying: !audio.paused };
   }
 
-  async updateNowPlayingInfo(options: { assetId: string }): Promise<void> {
+  async updateNowPlayingInfo(options: { assetId: string, title?: string, artist?: string }): Promise<void> {
     throw `updateNowPlayingInfo is not supported for web: ${JSON.stringify(options)}`;
   }
 

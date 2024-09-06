@@ -364,8 +364,25 @@ public class NativeAudio: CAPPlugin {
             return .success
         }
 
-        commandCenter.nextTrackCommand.isEnabled = false // Implement next track functionality if required
-        commandCenter.previousTrackCommand.isEnabled = false // Implement previous track functionality if required
+        commandCenter.nextTrackCommand.isEnabled = true
+        commandCenter.nextTrackCommand.addTarget { event in
+            if let audioAsset = self.audioList.values.first as? AudioAsset {
+                self.notifyListeners("nextTrackCommandPressed", data: [
+                    "assetId": audioAsset.assetId
+                ])
+            }
+            return .success
+        }
+
+        commandCenter.previousTrackCommand.isEnabled = true
+        commandCenter.previousTrackCommand.addTarget { event in
+            if let audioAsset = self.audioList.values.first as? AudioAsset {
+                self.notifyListeners("previousTrackCommandPressed", data: [
+                    "assetId": audioAsset.assetId
+                ])
+            }
+            return .success
+        }
     }
 
     func analyzeAudioBuffer(buffer: AVAudioPCMBuffer) {

@@ -401,6 +401,38 @@ Listen for asset completed playing event
 --------------------
 
 
+### addListener('nextTrackCommandPressed', ...)
+
+```typescript
+addListener(eventName: 'nextTrackCommandPressed', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'nextTrackCommandPressed'</code>                |
+| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
+### addListener('previousTrackCommandPressed', ...)
+
+```typescript
+addListener(eventName: 'previousTrackCommandPressed', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'previousTrackCommandPressed'</code>            |
+| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
 ### Interfaces
 
 

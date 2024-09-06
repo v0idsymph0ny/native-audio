@@ -20,6 +20,8 @@ export interface NativeAudio {
    * @since 5.0.1
    */
   addListener(eventName: 'complete', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
+  addListener(eventName: 'nextTrackCommandPressed', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
+  addListener(eventName: 'previousTrackCommandPressed', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
 }
 
 export interface ConfigureOptions {

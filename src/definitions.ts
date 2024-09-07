@@ -14,14 +14,24 @@ export interface NativeAudio {
   getDuration(options: { assetId: string }): Promise<{ duration: number }>;
   isPlaying(options: { assetId: string }): Promise<{ isPlaying: boolean }>;
   updateNowPlayingInfo(options: { assetId: string, title?: string, artist?: string }): Promise<void>;
+  /*
+   * Listen for asset playing state events
+   */
+  addListener(eventName: 'audioHasStartedPlaying', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
+  addListener(eventName: 'audioHasPausedPlaying', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
+  addListener(eventName: 'audioHasResumedPlaying', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
+  addListener(eventName: 'audioHasStoppedPlaying', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
+  /*
+   * Listen for command center events
+   */
+  addListener(eventName: 'nextTrackCommandWasPressed', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
+  addListener(eventName: 'previousTrackCommandWasPressed', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
   /**
    * Listen for asset completed playing event
    *
    * @since 5.0.1
    */
   addListener(eventName: 'complete', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
-  addListener(eventName: 'nextTrackCommandPressed', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
-  addListener(eventName: 'previousTrackCommandPressed', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
 }
 
 export interface ConfigureOptions {

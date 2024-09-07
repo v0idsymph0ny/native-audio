@@ -381,6 +381,102 @@ updateNowPlayingInfo(options: { assetId: string; title?: string; artist?: string
 --------------------
 
 
+### addListener('audioHasStartedPlaying', ...)
+
+```typescript
+addListener(eventName: 'audioHasStartedPlaying', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'audioHasStartedPlaying'</code>                 |
+| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
+### addListener('audioHasPausedPlaying', ...)
+
+```typescript
+addListener(eventName: 'audioHasPausedPlaying', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'audioHasPausedPlaying'</code>                  |
+| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
+### addListener('audioHasResumedPlaying', ...)
+
+```typescript
+addListener(eventName: 'audioHasResumedPlaying', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'audioHasResumedPlaying'</code>                 |
+| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
+### addListener('audioHasStoppedPlaying', ...)
+
+```typescript
+addListener(eventName: 'audioHasStoppedPlaying', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'audioHasStoppedPlaying'</code>                 |
+| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
+### addListener('nextTrackCommandWasPressed', ...)
+
+```typescript
+addListener(eventName: 'nextTrackCommandWasPressed', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'nextTrackCommandWasPressed'</code>             |
+| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
+### addListener('previousTrackCommandWasPressed', ...)
+
+```typescript
+addListener(eventName: 'previousTrackCommandWasPressed', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'previousTrackCommandWasPressed'</code>         |
+| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
 ### addListener('complete', ...)
 
 ```typescript
@@ -397,38 +493,6 @@ Listen for asset completed playing event
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 5.0.1
-
---------------------
-
-
-### addListener('nextTrackCommandPressed', ...)
-
-```typescript
-addListener(eventName: 'nextTrackCommandPressed', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
-```
-
-| Param              | Type                                                  |
-| ------------------ | ----------------------------------------------------- |
-| **`eventName`**    | <code>'nextTrackCommandPressed'</code>                |
-| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
-
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
-
---------------------
-
-
-### addListener('previousTrackCommandPressed', ...)
-
-```typescript
-addListener(eventName: 'previousTrackCommandPressed', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
-```
-
-| Param              | Type                                                  |
-| ------------------ | ----------------------------------------------------- |
-| **`eventName`**    | <code>'previousTrackCommandPressed'</code>            |
-| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
-
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 

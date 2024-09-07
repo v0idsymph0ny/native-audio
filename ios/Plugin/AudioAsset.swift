@@ -75,6 +75,10 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
         player.play()
         playIndex = Int(truncating: NSNumber(value: playIndex + 1))
         playIndex = Int(truncating: NSNumber(value: playIndex % channels.count))
+
+        self.owner.notifyListeners("audioHasStartedPlaying", data: [
+            "assetId": self.assetId
+        ])
     }
 
     func playWithFade(time: TimeInterval) {
@@ -92,11 +96,19 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
                 player.volume = player.volume + self.FADE_STEP
             }
         }
+
+        self.owner.notifyListeners("audioHasStartedPlaying", data: [
+            "assetId": self.assetId
+        ])
     }
 
     func pause() {
         let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
         player.pause()
+
+        self.owner.notifyListeners("audioHasPausedPlaying", data: [
+            "assetId": self.assetId
+        ])
     }
 
     func resume() {
@@ -104,6 +116,10 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
 
         let timeOffset = player.deviceCurrentTime + 0.01
         player.play(atTime: timeOffset)
+
+        self.owner.notifyListeners("audioHasResumedPlaying", data: [
+            "assetId": self.assetId
+        ])
     }
 
     func stop() {
@@ -111,6 +127,10 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
             let player: AVAudioPlayer! = channels.object(at: i) as? AVAudioPlayer
             player.stop()
         }
+
+        self.owner.notifyListeners("audioHasStoppedPlaying", data: [
+            "assetId": self.assetId
+        ])
     }
 
     func stopWithFade() {
@@ -128,6 +148,10 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
                 player.volume = player.volume + self.FADE_STEP
             }
         }
+
+        self.owner.notifyListeners("audioHasStoppedPlaying", data: [
+            "assetId": self.assetId
+        ])
     }
 
     func loop() {
@@ -160,10 +184,12 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
     }
 
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        NSLog("playerDidFinish")
-        self.owner.notifyListeners("complete", data: [
-            "assetId": self.assetId
-        ])
+        if player.currentTime == 0 {
+            NSLog("playerDidFinish")
+            self.owner.notifyListeners("complete", data: [
+                "assetId": self.assetId
+            ])
+        }
     }
 
     func playerDecodeError(player: AVAudioPlayer!, error: NSError!) {

@@ -367,7 +367,7 @@ public class NativeAudio: CAPPlugin {
         commandCenter.nextTrackCommand.isEnabled = true
         commandCenter.nextTrackCommand.addTarget { event in
             if let audioAsset = self.audioList.values.first as? AudioAsset {
-                self.notifyListeners("nextTrackCommandPressed", data: [
+                self.notifyListeners("nextTrackCommandWasPressed", data: [
                     "assetId": audioAsset.assetId
                 ])
             }
@@ -377,7 +377,7 @@ public class NativeAudio: CAPPlugin {
         commandCenter.previousTrackCommand.isEnabled = true
         commandCenter.previousTrackCommand.addTarget { event in
             if let audioAsset = self.audioList.values.first as? AudioAsset {
-                self.notifyListeners("previousTrackCommandPressed", data: [
+                self.notifyListeners("previousTrackCommandWasPressed", data: [
                     "assetId": audioAsset.assetId
                 ])
             }

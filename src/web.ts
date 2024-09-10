@@ -82,6 +82,14 @@ export class NativeAudioWeb extends WebPlugin implements NativeAudio {
     audio.currentTime = 0;
   }
 
+  async seek(options: { assetId: string; time?: number }): Promise<void> {
+    const audio: HTMLAudioElement = this.getAudioAsset(options.assetId).audio;
+    await this.stop(options);
+    audio.loop = false;
+    audio.currentTime = options.time ?? 0;
+    return audio.play();
+  }
+
   async unload(options: { assetId: string }): Promise<void> {
     await this.stop(options);
     NativeAudioWeb.AUDIO_ASSET_BY_ASSET_ID.delete(options.assetId);

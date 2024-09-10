@@ -69,12 +69,23 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
     }
 
     func play(time: TimeInterval) {
+        guard channels.count > 0 else {
+            // Notify frontend or log the issue if channels are empty.
+            self.owner.notifyListeners("audioError", data: [
+                "assetId": self.assetId,
+                "message": "No available audio channels to play the file."
+            ])
+            print("Error: No available audio channels to play the file.")
+            return
+        }
+
         let player: AVAudioPlayer = channels.object(at: playIndex) as! AVAudioPlayer
         player.currentTime = time
         player.numberOfLoops = 0
         player.play()
-        playIndex = Int(truncating: NSNumber(value: playIndex + 1))
-        playIndex = Int(truncating: NSNumber(value: playIndex % channels.count))
+
+        // Ensure playIndex is cycled through available channels
+        playIndex = (playIndex + 1) % channels.count
 
         self.owner.notifyListeners("audioHasStartedPlaying", data: [
             "assetId": self.assetId
@@ -184,11 +195,16 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
     }
 
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if player.currentTime == 0 {
+        // Check if the player has reached the end of the file
+        NSLog("CurrentTime: \(player.currentTime), Duration: \(player.duration), Flag: \(flag)")
+
+        if flag {
             NSLog("playerDidFinish")
             self.owner.notifyListeners("complete", data: [
                 "assetId": self.assetId
             ])
+        } else {
+            NSLog("player stopped early or interrupted")
         }
     }
 

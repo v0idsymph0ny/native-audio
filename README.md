@@ -245,6 +245,19 @@ play(options: { assetId: string; time?: number; }) => Promise<void>
 --------------------
 
 
+### seek(...)
+
+```typescript
+seek(options: { assetId: string; time?: number; }) => Promise<void>
+```
+
+| Param         | Type                                             |
+| ------------- | ------------------------------------------------ |
+| **`options`** | <code>{ assetId: string; time?: number; }</code> |
+
+--------------------
+
+
 ### pause(...)
 
 ```typescript

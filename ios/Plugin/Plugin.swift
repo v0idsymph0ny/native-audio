@@ -235,6 +235,19 @@ public class NativeAudio: CAPPlugin {
         call.resolve()
     }
 
+    @objc func seek(_ call: CAPPluginCall) {
+        guard let audioAsset: AudioAsset = self.getAudioAsset(call) else {
+            return
+        }
+
+        //let audioId = call.getString(Constant.AssetIdKey) ?? ""
+        let time = call.getDouble("time") ?? 0
+
+        audioAsset.seek(to: time)
+
+        call.resolve()
+    }
+
     private func preloadAsset(_ call: CAPPluginCall, isComplex complex: Bool) {
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
         let channels: NSNumber?

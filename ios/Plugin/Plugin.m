@@ -11,6 +11,7 @@ CAP_PLUGIN(NativeAudio, "NativeAudio",
     CAP_PLUGIN_METHOD(loop, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(pause, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(resume, CAPPluginReturnPromise);
+    CAP_PLUGIN_METHOD(seek, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(unload, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(setVolume, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(getCurrentTime, CAPPluginReturnPromise);

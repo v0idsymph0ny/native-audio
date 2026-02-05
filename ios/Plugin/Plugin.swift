@@ -8,10 +8,6 @@ enum MyError: Error {
     case runtimeError(String)
 }
 
-/**
- * Please read the Capacitor iOS Plugin Development Guide
- * here: https://capacitor.ionicframework.com/docs/plugins/ios
- */
 @objc(NativeAudio)
 public class NativeAudio: CAPPlugin {
 
@@ -77,7 +73,6 @@ public class NativeAudio: CAPPlugin {
         let time = call.getDouble("time") ?? 0
         if audioId != "" {
             let queue = DispatchQueue(label: "com.getcapacitor.community.audio.complex.queue", qos: .userInitiated)
-
             queue.async {
                 if self.audioList.count > 0 {
                     let asset = self.audioList[audioId]
@@ -350,7 +345,7 @@ public class NativeAudio: CAPPlugin {
         commandCenter.playCommand.isEnabled = true
         commandCenter.playCommand.addTarget { event in
             if let audioAsset = self.audioList.values.first as? AudioAsset {
-                audioAsset.resume()
+                audioAsset.play(time: audioAsset.getCurrentTime())
                 //self.updateNowPlayingInfo(forAudioAsset: audioAsset)
             }
             return .success

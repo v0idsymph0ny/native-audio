@@ -458,6 +458,22 @@ addListener(eventName: 'audioHasStoppedPlaying', listenerFunc: (event: { assetId
 --------------------
 
 
+### addListener('audioHasBeenInterrupted', ...)
+
+```typescript
+addListener(eventName: 'audioHasBeenInterrupted', listenerFunc: (event: { assetId: string; }) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'audioHasBeenInterrupted'</code>                |
+| **`listenerFunc`** | <code>(event: { assetId: string; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+--------------------
+
+
 ### addListener('nextTrackCommandWasPressed', ...)
 
 ```typescript

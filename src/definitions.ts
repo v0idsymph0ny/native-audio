@@ -22,6 +22,7 @@ export interface NativeAudio {
   addListener(eventName: 'audioHasPausedPlaying', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
   addListener(eventName: 'audioHasResumedPlaying', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
   addListener(eventName: 'audioHasStoppedPlaying', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
+  addListener(eventName: 'audioHasBeenInterrupted', listenerFunc: (event: { assetId: string }) => void): Promise<PluginListenerHandle>;
   /*
    * Listen for command center events
    */

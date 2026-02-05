@@ -46,7 +46,40 @@ public class AudioAsset: NSObject, AVAudioPlayerDelegate {
 
             }
         }
+
+        // Check for interruptions
+        NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption), name: AVAudioSession.interruptionNotification, object: nil)
     }
+
+    @objc func handleInterruption(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+
+        switch type {
+        case .began:
+            // Audio has been interrupted, for example, by another app playing sound
+            self.owner.notifyListeners("audioHasBeenInterrupted", data: [
+                "assetId": self.assetId
+            ])
+        case .ended:
+            // Interruption has ended. You can decide whether to resume playback or not.
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume) {
+                    print("Interruption ended - should resume playback")
+                } else {
+                    print("Interruption ended - do not resume playback")
+                }
+                self.resume()
+            }
+        default:
+            break
+        }
+    }
+
 
     func getCurrentTime() -> TimeInterval {
         if channels.count != 1 {
